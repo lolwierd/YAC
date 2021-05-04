@@ -24,29 +24,46 @@
     public function number($number){
       Log::info('NUM method called. With num: ' . $number . " First: " . $this->first . " Second: " . $this->second);
       if ($this->op == null) {
-        $this->first = $this->first ? $number : $this->first . $number;
+        $this->first = $this->first == null || $this->first === '0' ? $number : $this->first . $number;
         $this->ans = $this->first;
       }
       else {
-        $this->second = $this->second ? $number : $this->second . $number;
+        $this->second = $this->second == null ? $number : $this->second . $number;
         $this->ans = $this->first . " " . $this->op . " " . $this->second;
       }
     }
 
     public function operator($op){
+      if ($this->first === null || $this->first === '0') {
+        return;
+      }
+      Log::info('OP method called. With op: ' . $op . " First: " . $this->first . " Second: " . $this->second);
+      if ($op === "AC") {
+        $this->clear();
+        return;
+      }
       if ($op === "=") {
         $this->equals();
         return;
       }
-      Log::info('OP method called. With op: ' . $op . " First: " . $this->first . " Second: " . $this->second);
+      if ($this->op != null) {
+        $this->equals();
+        $this->first = $this->ans;
+        $this->op = $op;
+        $this->ans = $this->ans . " " . $op;
+        return;
+      }
+      Log::info("Not in any IF's");
       $this->op = $op;
       $this->ans = $this->first . " " . $this->op . " ";
     }
 
     public function equals(){
-      $fun = ["+" => 'add', "-" => 'subtract', "/" => 'divide', '*' => 'multiply', 'AC' => "clear"][$this->op];
+      $fun = ["+" => 'add', "-" => 'subtract', "/" => 'divide', '*' => 'multiply'][$this->op];
       $this->$fun();
-      $this->clear();
+      $this->first = null;
+      $this->second = null;
+      $this->op = null;
     }
 
 
@@ -67,9 +84,11 @@
     }
 
     public function clear(){
+      Log::info("In clear!");
       $this->first = null;
       $this->second = null;
       $this->op = null;
+      $this->ans = '0';
     }
 
 
