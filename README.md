@@ -1,6 +1,6 @@
 # Yet Another Calculator.
 
-### Made using Tailwind, Alpine js, Laravel, Livewire.
+### Made using Tailwind, Laravel, Livewire.
 
 ### To run:
 
